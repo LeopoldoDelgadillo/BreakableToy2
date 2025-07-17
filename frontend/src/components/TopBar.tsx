@@ -1,9 +1,9 @@
-import { useMiddleConfig } from './MiddleValue';
+import { useMiddle } from './MiddleContext';
 import homeIcon from 'D:/SpotifyApp/frontend/src/assets/home.svg';
 
 export const TopBar = () => {
 
-    const { middleValue, changeValue } = useMiddleConfig();
+    const { middleValue, changeValue } = useMiddle();
 
     const mainPage = () => {
         changeValue(0)

@@ -1,21 +1,34 @@
-async function getProfile() {
-    await fetch('http://127.0.0.1:8080/me', {
+import { useEffect, useState } from "react";
+
+function getProfile() {
+    const [fetchResponse, setFetchResponse] = useState<any>(null);
+    useEffect(() => {
+    fetch('http://localhost:9090/me', {
         method: 'GET',
         headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
     },
     })
-    .then(response => {
+    .then(async response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-    })
-    return (
+        setFetchResponse(await response.json())
+        console.log(await fetchResponse)
+        
+    });
+    },[]);
+    return(
         <div>
-            <h1>Profile Loaded Successfully</h1>
+        {fetchResponse ? (
+            JSON.stringify(fetchResponse,null,3)
+        ) : (
+            <h1>Nothing to see on profile</h1>
+        
+        )}
         </div>
-    );
+    )
 }
 
 export default getProfile;
