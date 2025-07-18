@@ -6,6 +6,8 @@ import Login from './pages/login.tsx'
 import Redirect from './pages/redirect.tsx'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { MiddleProvider } from './components/MiddleContext.tsx'
+
+  
 createRoot(document.getElementById('root')!).render(
   <MiddleProvider>
     <BrowserRouter>

@@ -110,6 +110,7 @@ public class SpotifyController {
         Cookie sessionCookie = new Cookie("sessionID",sessionID);
         sessionCookie.setHttpOnly(false);
         sessionCookie.setPath("/");
+        sessionCookie.setMaxAge(3000);
         cookieResponse.addCookie(sessionCookie);
 
         return response.toString();

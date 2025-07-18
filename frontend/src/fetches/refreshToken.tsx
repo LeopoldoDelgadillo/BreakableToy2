@@ -19,7 +19,7 @@ export const refreshToken = async () => {
                 },
             })
             .then(response => {
-                console.log("Access token refreshed");
+                console.log("Access token refreshed")
             });
         }
     }

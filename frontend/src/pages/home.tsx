@@ -1,13 +1,17 @@
-import loginCheck from '../components/loginCheck';
+
+import { useEffect, useRef } from 'react'
 import { Middle } from '../components/Middle'
 import { NowPlaying } from '../components/NowPlaying'
-import { refreshToken } from '../components/refreshToken';
 import { TopBar } from '../components/TopBar'
-import fetchProfile from '../homeFetches/fetchProfile';
+import fetchProfile from '../fetches/fetchProfile'
+import loginCheck from '../fetches/loginCheck'
+import { refreshToken } from '../fetches/refreshToken'
+
+
 function Home() {
-  loginCheck();
-  fetchProfile();
-  refreshToken();
+    loginCheck()
+    fetchProfile()
+    refreshToken()
   return (
     <>
     <div>
