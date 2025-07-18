@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 
-function getProfile() {
+
+
+export const getProfile = () => {
+    
     const [fetchResponse, setFetchResponse] = useState<any>(null);
     useEffect(() => {
-    fetch('http://localhost:9090/me', {
+    fetch('http://127.0.0.1:9090/me', {
         method: 'GET',
+        credentials: 'include',
         headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -15,20 +19,9 @@ function getProfile() {
             throw new Error('Network response was not ok');
         }
         setFetchResponse(await response.json())
-        console.log(await fetchResponse)
-        
+        sessionStorage.setItem('myProfile',`${JSON.stringify(fetchResponse)}`)
+        console.log(JSON.stringify(fetchResponse)," stored")
     });
     },[]);
-    return(
-        <div>
-        {fetchResponse ? (
-            JSON.stringify(fetchResponse,null,3)
-        ) : (
-            <h1>Nothing to see on profile</h1>
-        
-        )}
-        </div>
-    )
 }
-
-export default getProfile;
+export default getProfile

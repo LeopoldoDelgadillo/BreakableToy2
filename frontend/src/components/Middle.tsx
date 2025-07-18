@@ -1,5 +1,5 @@
 import { useMiddle } from './MiddleContext';
-import Profile from 'D:\\SpotifyApp\\frontend\\src\\modules\\profile.tsx'
+import Profile from '../middleModules/profile'
 
 export const Middle = () => {
 

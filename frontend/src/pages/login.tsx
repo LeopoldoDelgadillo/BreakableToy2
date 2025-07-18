@@ -1,18 +1,19 @@
 
 function Login() {
-    const loginTry = async () => {
-        try{
-            const loginURL = await (await fetch("http://localhost:9090/login",)).text();
-            console.log("loginURL: ",loginURL);
-            window.location.href = loginURL;
+        fetch("http://127.0.0.1:9090/login", {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
             
-        }
-        catch (error) {
-            console.error("Error during login:", error);
-        }
-    
-    }
-    loginTry();
+            },
+        })
+        .then(response => response.text())
+        .then(data => {
+            console.log("loginURL: ",data);
+            window.location.href = data;
+        });
     return (
     <div>AAAAAA</div>
     );
