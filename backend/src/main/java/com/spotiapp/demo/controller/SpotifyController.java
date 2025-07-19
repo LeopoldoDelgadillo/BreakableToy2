@@ -4,6 +4,8 @@ import com.spotiapp.demo.ParameterStringBuilder;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.yaml.snakeyaml.Yaml;
 import java.io.BufferedReader;
@@ -44,7 +46,7 @@ public class SpotifyController {
             Map<String, String> requestParams = new HashMap<>();
             requestParams.put("client_id", yamlMap.get("clientID").toString());
             requestParams.put("response_type", "code");
-            requestParams.put("scope", "user-read-private user-read-email");
+            requestParams.put("scope", "user-read-private user-read-email user-top-read user-follow-read");
             requestParams.put("redirect_uri", "http://127.0.0.1:8080/redirect");
             requestParams.put("show_dialog", "True");
             encodedURL = requestParams.keySet().stream()
@@ -181,8 +183,33 @@ public class SpotifyController {
     }
 
     @GetMapping("/me/top/artists")
-    public String top10() {
-        return "top10 test";
+    public ResponseEntity<String> top10(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID) throws IOException {
+        File tokenFile = new File("D:\\SpotifyUsers\\"+sessionID+".txt");
+        Scanner readTokenFile = new Scanner(tokenFile);
+        String data = readTokenFile.nextLine();
+        String tokens[] = data.split(":"); //tokens[0] = clientID, tokens[1] = clientSecret
+        readTokenFile.close(); 
+        //gotten from baeldung.com
+        //https://www.baeldung.com/java-http-request
+        URL url = new URL("https://api.spotify.com/v1/me/top/artists?time_range=medium_term&limit=10&offset=0");
+        System.out.println("URL: " + url);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        System.out.println("Connection established: " + con);
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Authorization", "Bearer "+ tokens[0]); 
+        System.out.println("connection: " + con);
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        System.out.println("Top Artists Response: " + response.toString());
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response.toString());
     }
 
     @GetMapping("/artists/{id}")
@@ -195,9 +222,37 @@ public class SpotifyController {
         return albumID+" test";
     }
 
-    @GetMapping("/search")
-    public String search() {
-        return "search test";
+    @PostMapping("/search")
+    public ResponseEntity<String> search(@RequestBody String body, @CookieValue(value="sessionID",defaultValue = "Atta")String sessionID) throws IOException {
+        File tokenFile = new File("D:\\SpotifyUsers\\"+sessionID+".txt");
+        Scanner readTokenFile = new Scanner(tokenFile);
+        String data = readTokenFile.nextLine();
+        String tokens[] = data.split(":"); //tokens[0] = clientID, tokens[1] = clientSecret
+        readTokenFile.close(); 
+        JSONObject jsonObject = new JSONObject(body);
+        String searchString = jsonObject.getString("searchString");
+        String userCountry = jsonObject.getString("userCountry");
+        //gotten from baeldung.com
+        //https://www.baeldung.com/java-http-request
+        URL url = new URL("https://api.spotify.com/v1/search?q="+searchString+"&type=track%2Cartist%2Calbum&market="+userCountry+"&limit=10&offset=0&include_external=audio");
+        System.out.println("URL: " + url);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        System.out.println("Connection established: " + con);
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Authorization", "Bearer "+ tokens[0]); 
+        System.out.println("connection: " + con);
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        System.out.println("Search Response: " + response.toString());
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response.toString());
     }
 
     @GetMapping("/me")
@@ -224,7 +279,7 @@ public class SpotifyController {
             response.append(inputLine);
         }
         in.close();
-        System.out.println("Response: " + response.toString());
+        System.out.println("User Profile Response: " + response.toString());
         return response.toString();
     }
 

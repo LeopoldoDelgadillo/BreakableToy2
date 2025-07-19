@@ -45,51 +45,51 @@ export const NowPlaying = () => {
   }
 
   return (
-    <div className="nowPlaying absolute bottom-0 w-full bg-black h-[50px] grid grid-cols-5 items-end">
-      <div className="playDiv grid grid-cols-5">
-        <div className="previous">
+    <div className="nowPlaying flex w-full grid grid-cols-5 items-center">
+      <div className="playDiv grid grid-cols-5 flex items-center justify-center">
+        <div className="previous flex items-center justify-center">
           <button><img src={previousSongIcon} alt="Previous" className="h-[35px] w-[35px]"/></button>
-        </div>
-        <div className="playPause">
+        </div> 
+        <div className="playPause flex items-center justify-center"> 
           <button onClick={() => playPause()}>
             {!isPlaying ? (<img src={playIcon} alt="Play" className="h-[35px] w-[35px]"/>) 
                       : (<img src={pauseIcon} alt="Pause" className="h-[35px] w-[35px]"/>)}</button>
-        </div>
-        <div className="next">
+        </div> 
+        <div className="next flex items-center justify-center"> 
           <button><img src={nextSongIcon} alt="Next" className="h-[35px] w-[35px]"/></button>
         </div>
       </div>
-      <div className="songDiv grid grid-cols-10 col-span-2">
-        <div className="shuffle">
+      <div className="songDiv grid grid-cols-10 col-span-2 flex items-center justify-center">
+        <div className="suffle flex items-center justify-center">
           <button onClick={() => shuffleSongs()}>
             {!isShuffling ? (<img src={shuffleIcon} alt="Shuffle" className="h-[35px] w-[35px]"/>) 
                       : (<img src={shufflingIcon} alt="Shuffling" className="h-[35px] w-[35px]"/>)}</button>
-        </div>
-        <div className="repeat">
+        </div> 
+        <div className="repeat flex items-center justify-center">         
           <button onClick={() => repeatSongs()}>
             {!isRepeating ? (<img src={repeatIcon} alt="Repeat" className="h-[35px] w-[35px]"/>) 
                       : (<img src={repeatingIcon} alt="Repeating" className="h-[35px] w-[35px]"/>)}</button>
         </div>
-        <div className="songBar grid grid-cols-8 col-start-3 col-span-7 items-center">
-          <div className="actualTime col-start-1">
+        <div className="songBar grid grid-cols-8 col-start-3 col-span-7 flex items-center">
+          <div className="actualTime flex items-center justify-center">
               0:00
           </div>
-          <div className="songProgress col-start-2 col-span-6">
-            <input type="range" min="0" max="100" className="w-full h-2 bg-gray-700 rounded-lg cursor-pointer range range-primary"/>
+          <div className="songProgress col-start-2 col-span-6 flex items-center justify-center">
+            <input type="range" min="0" max="100" defaultValue="0" className="w-full h-2 bg-gray-700 rounded-lg cursor-pointer range range-primary"/>
           </div>   
-          <div className="totalTime col-start-8 ml-[2px]">
+          <div className="totalTime col-start-8 flex items-center justify-center">
               3:00
           </div>
         </div>
-        <div className="volume col-start-10 relative group">
+        <div className="volume col-start-10 relative group flex items-center justify-center">
           <div className="bg-black h-[110px] w-[35px] opacity-25 mb-2 absolute bottom-[30px] rounded-md invisible group-hover:visible transistion:opacity group-hover:opacity-100">
-            <input type="range" min="0" max="100" className="transform rotate-[270deg] absolute bottom-[50px] left-[-32px] w-[100px] h-2 bg-gray-700 rounded-lg cursor-pointer"/>
+            <input type="range" min="0" max="100" defaultValue={100} className="transform rotate-[270deg] absolute bottom-[40px] left-[-32px] w-[100px] h-2 bg-gray-700 rounded-lg cursor-pointer"/>
           </div>
             <button><img src={volumeHighIcon} alt="VolumeHigh" className="h-[35px] w-[35px]"/></button>
         </div>
       </div>
-      <div className="artist grid grid-cols-10 col-start-4 col-span-2">
-        <div className="lyrics col-start-3">
+      <div className="artist grid grid-cols-10 col-start-4 col-span-2 flex items-center justify-center">
+        <div className="lyrics col-start-3 flex items-center justify-center">
           <button><img src={lyricsIcon} alt="Lyrics" className="h-[35px] w-[35px]"/></button>
         </div>
         <div className="artistImg">
@@ -98,12 +98,12 @@ export const NowPlaying = () => {
         <div className="artist/SongName">
 
         </div>
-        <div className="songLiked col-start-9">
+        <div className="songLiked col-start-9 flex items-center justify-center">
           <button onClick={() => likeLiked()}>
             {!isLiked ? (<img src={likeIcon} alt="Like" className="h-[35px] w-[35px]"/>) 
                       : (<img src={likedIcon} alt="Liked" className="h-[35px] w-[35px]"/>)}</button>
         </div>
-        <div className="followArtist col-start-10">
+        <div className="followArtist col-start-10 flex items-center justify-center">
           <button onClick={() => followUnfollow()}>
             {!isFollowed ? (<img src={followArtistIcon} alt="Follow" className="h-[35px] w-[35px]"/>) 
                       : (<img src={followingArtistIcon} alt="Followed" className="h-[35px] w-[35px]"/>)}</button>

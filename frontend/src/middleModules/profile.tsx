@@ -1,28 +1,15 @@
-interface Profile {
-  country: number;
-  display_name: string;
-  email: string;
-  explicit_content: {filter_enabled: boolean, filter_locked: boolean};
-  external_urls: {spotify: string};
-  followers: {href: null, total: number};
-  href: string;
-  id: string;
-  images: [{height: number, url: string, width: number},{height: number, url: string, width: number}];
-  product: string;
-  type: string;
-  uri: string;
-}
+import { useProfile } from "../components/ProfileContext"
 
 function displayProfile() {
-    const myProfileJSON = sessionStorage.getItem('myProfile')
-    let myProfile: Profile | null = null;
-    if (myProfileJSON != null){
-    myProfile = JSON.parse(myProfileJSON)
+    const {profileContent} = useProfile()
+    let myProfile: any
+    if (profileContent != null){
+        myProfile = profileContent
     }
     return(
         <div>
         {myProfile ? (
-            <div className="grid grid-cols-2 items-center">
+            <div className="border-[2px] grid grid-cols-2 flex items-center">
                 <div >
                     <img src={`${myProfile.images[0].url}`} className={`rounded-full max-w-${myProfile.images[0].width} max-h-${myProfile.images[0].height}`}></img>
                 </div>

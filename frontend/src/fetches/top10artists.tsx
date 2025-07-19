@@ -1,6 +1,7 @@
 
-export const getProfile = (setSearchResult: (data: JSON) => void) => {
-    fetch('http://127.0.0.1:9090/me', {
+export const getTop10Artists = (setSearchResult: (data: JSON) => void) => {
+    
+    fetch('http://127.0.0.1:9090/me/top/artists', {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -15,4 +16,4 @@ export const getProfile = (setSearchResult: (data: JSON) => void) => {
         } catch(e) {console.error("Invalid JSON", e)}
     });
 }
-export default getProfile
+export default getTop10Artists
