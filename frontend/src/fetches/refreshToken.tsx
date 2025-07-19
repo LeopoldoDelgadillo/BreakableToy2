@@ -8,6 +8,7 @@ export const refreshToken = () => {
                 const Timer  = sessionStorage.getItem('sessionTimer')
                 if(Timer != null){
                     const NumTimer = +Timer
+                    console.log("set Timer: ",NumTimer)
                     console.log("Refresh in: ",(NumTimer+3500000)-(Date.now()))
                     if((NumTimer+3500000)-(Date.now()) <= 0) {
                         fetch("http://127.0.0.1:9090/token/refresh", {
@@ -20,13 +21,15 @@ export const refreshToken = () => {
                             },
                         })
                         .then(response => {
+                            if(!response.ok){return window.location.href = "http://127.0.0.1:8080/login"}
                             console.log("Access token refreshed")
                             sessionStorage.setItem('sessionTimer',`${Date.now()}`)
+                            
                         });
                     }
                 }
             }
-        },1000)
+        },10000)
         return () => clearInterval(intervalTimer)
     },[])
 }

@@ -22,14 +22,14 @@ function Home() {
     
     refreshToken()
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-gray-900">
-    <div className="h-[75px] flex flex-none z-10 bg-black">
+    <div className="flex flex-col h-screen overflow-hidden items-center bg-gray-900">
+    <div className="h-[75px] flex flex-none w-screen z-10 bg-black">
       <TopBar />
     </div>
-    <div className="flex-1 overflow-auto relative h-full z-0">
+    <div className="flex-1 overflow-auto relative items-center justify-center  h-full w-screen z-0">
       <Middle />
     </div>
-    <div className="h-[50px] flex flex-none z-10 bg-black items-center">
+    <div className="h-[50px] flex flex-none z-10 bg-black w-screen items-center">
       <NowPlaying />
     </div>
     </div>
