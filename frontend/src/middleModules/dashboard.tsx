@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import { useSongSearch } from "../components/songSearchContext";
 import { useTop10 } from "../components/Top10Context";
+import { useSongSearch } from "../components/songSearchContext";
+import { useMiddle } from "../components/MiddleContext";
+import { useIdentifier } from "../components/IdentifierContext";
 
 type searched = {
   id: string;
@@ -8,6 +10,9 @@ type searched = {
   artists: string[];
   followers: number | undefined;
   image: string;
+  type: string;
+  middleFunc: (val:number) => void
+  identifierFunc: (val:string[]) => void
 };
 
 type top10 = {
@@ -16,8 +21,8 @@ type top10 = {
     image: string;
 }
 
-const SearchedArray = ({ name, artists, image, id, followers }: searched) => (
-  <div className="p-4 m-2 bg-gray-800 rounded-lg shadow-md text-white hover:bg-gray-700 transition grid grid-cols-4 flex max-h-[500px] overflow-auto">
+const SearchedArray = ({ name, artists, image, id, followers, type, middleFunc,identifierFunc}: searched) => (
+    <button onClick={() => clicked(id,type,middleFunc,identifierFunc)} className="p-4 m-2 bg-gray-800 rounded-lg shadow-md text-white hover:bg-gray-700 transition grid grid-cols-4 flex max-h-[500px] overflow-auto">
         <div className="grid col-start-1 items-center"><img src={image} className="rounded-lg w-[64px] h-[64px]"></img></div>
         <div className="grid col-start-2 col-span-4">
             <p className="text-[13px]">{name}</p>
@@ -25,20 +30,34 @@ const SearchedArray = ({ name, artists, image, id, followers }: searched) => (
             {followers != undefined && (<p className="text-[13px]">Followers: {followers}</p>)}
             <p className="text-[13px]">ID: {id}</p>
         </div>
-    </div>
+    </button>
 )
 
 const Top10Artists = ({name, followers, image}: top10) => (
-    <div className="p-4 m-3 bg-gray-800 rounded-lg shadow-md text-white hover:bg-gray-700 transition grid grid-cols-4 flex max-h-[100px] min-w-[200px]">
+    <button className="p-4 m-3 bg-gray-800 rounded-lg shadow-md text-white hover:bg-gray-700 transition grid grid-cols-4 flex max-h-[100px] min-w-[200px]">
         <div className="grid col-start-1 items-center"><img src={image} className="rounded-lg w-[64px] h-[64px]"></img></div>
         <div className="grid col-start-2 col-span-4 ml-2">
             <p className="text-[13px]">{name}</p>
             <p className="text-[13px]">{followers} followers</p>
         </div>
-    </div>
+    </button>
 )
+function clicked(id:string, type: string, midFunc: (val: number) => void, idFunc: (val: string[]) => void) {
+            if(type === "track") {
+                idFunc([id,type])
+            }
+            else if(type === "artist") {
+                idFunc([id,type])
+            }
+            else if(type === "album") {
+                idFunc([id,type])
+            }
+            midFunc(2)
+    }
 
 function dashboard() {
+    const { changeValue } = useMiddle()
+    const {changeIdentifier} = useIdentifier()
     const {top10} = useTop10()
     const [top10JSX, setTop10JSX] = useState<any[]>([])
     useEffect(() => {
@@ -61,6 +80,7 @@ function dashboard() {
         let searchData: any
         if (searchDataString != null && searchDataString != ""){
             searchData = JSON.parse(searchDataString)
+            console.log(searchData)
         }
         if(searchData?.tracks?.items) {
             //I asked chatGPT how to de-duplicate
@@ -96,7 +116,7 @@ function dashboard() {
                             key={artist.id}
                             name={artist.name}
                             followers={artist.followers.total}
-                            image={artist.images[1].url} 
+                            image={artist.images[0]?.url || "D:\\SpotifyApp\\frontend\\src\\assets\\encoraLogo.svg"} 
                         />  
                     ))}
                 </div>
@@ -116,8 +136,11 @@ function dashboard() {
                                 key={`${song.id}-${idx}`}
                                 name={song.name}
                                 artists={song.artists.map((a: any) => a.name)}
-                                image={song.album.images[2].url} 
-                                followers={undefined}                                
+                                image={song.album.images[0]?.url || "D:\\SpotifyApp\\frontend\\src\\assets\\encoraLogo.svg"} 
+                                followers={undefined}
+                                type={song.type}
+                                middleFunc={changeValue}
+                                identifierFunc={changeIdentifier}
                             />
                         ))}
                         </div>
@@ -130,9 +153,12 @@ function dashboard() {
                                 id={artist.id}
                                 key={`${artist.id}-${idx}`}
                                 name={artist.name}
-                                image={artist.images[2].url} 
+                                image={artist.images[0]?.url || "D:\\SpotifyApp\\frontend\\src\\assets\\encoraLogo.svg"} 
                                 followers={artist.followers.total}   
-                                artists={[]}                              
+                                artists={[]} 
+                                type={artist.type}
+                                middleFunc={changeValue}
+                                identifierFunc={changeIdentifier}
                             />
                         ))}
                         </div>
@@ -145,9 +171,12 @@ function dashboard() {
                                 id={album.id}
                                 key={`${album.id}-${idx}`}
                                 name={album.name}
-                                image={album.images[2].url} 
+                                image={album.images[0]?.url || "D:\\SpotifyApp\\frontend\\src\\assets\\encoraLogo.svg"} 
                                 artists={album.artists.map((a: any) => a.name)} 
-                                followers={undefined}                              
+                                followers={undefined}
+                                type={album.type}
+                                middleFunc={changeValue}
+                                identifierFunc={changeIdentifier}
                             />
                         ))}
                         </div>

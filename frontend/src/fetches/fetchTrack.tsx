@@ -1,0 +1,16 @@
+export const getTrack = (trackID: string, profile: JSON): Promise<JSON> => {
+    let myProfile: any
+    if (profile != null){
+    myProfile = profile
+    }
+    return fetch(`http://127.0.0.1:9090/tracks/${trackID}?country=${myProfile.country}`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+}
+export default getTrack

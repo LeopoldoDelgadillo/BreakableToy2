@@ -1,7 +1,7 @@
 import { useMiddle } from './MiddleContext'
 import Profile from '../middleModules/profile'
 import Dashboard from '../middleModules/dashboard'
-
+import AlbumSongArtist from '../middleModules/AlbumOrSong'
 export const Middle = () => {
 
     const { middleValue } = useMiddle()
@@ -9,9 +9,13 @@ export const Middle = () => {
         <div className="middle ">
             {middleValue === 0 ? (
                 <Dashboard />
-                    ) : (
+                    ) : 
+             middleValue === 1 ? (
                 <Profile />
-            )}
+            ) : (
+                <AlbumSongArtist/>
+            )
+            }
         </div>
     );
 }
