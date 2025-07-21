@@ -21,8 +21,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -242,6 +244,66 @@ public class SpotifyController {
             .body(response.toString());
     }
 
+    @GetMapping("/artists/{id}/top-tracks")
+    public ResponseEntity<String> artistToptracksInfo(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID, @PathVariable("id") String id, @RequestParam("country") String country) throws IOException {
+        File tokenFile = new File("D:\\SpotifyUsers\\"+sessionID+".txt");
+        Scanner readTokenFile = new Scanner(tokenFile);
+        String data = readTokenFile.nextLine();
+        String tokens[] = data.split(":"); //tokens[0] = access_token, tokens[1] = refresh_token
+        readTokenFile.close();
+        //gotten from baeldung.com
+        //https://www.baeldung.com/java-http-request
+        URL url = new URL("https://api.spotify.com/v1/artists/"+id+"/top-tracks?market="+country);
+        System.out.println("URL: " + url);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        System.out.println("Connection established: " + con);
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Authorization", "Bearer "+ tokens[0]); 
+        System.out.println("connection: " + con);
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        System.out.println("Artist Top Tracks Response: " + response.toString());
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response.toString());
+    }
+
+    @GetMapping("/artists/{id}/albums")
+    public ResponseEntity<String> artistAlbumsInfo(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID, @PathVariable("id") String id, @RequestParam("country") String country) throws IOException {
+        File tokenFile = new File("D:\\SpotifyUsers\\"+sessionID+".txt");
+        Scanner readTokenFile = new Scanner(tokenFile);
+        String data = readTokenFile.nextLine();
+        String tokens[] = data.split(":"); //tokens[0] = access_token, tokens[1] = refresh_token
+        readTokenFile.close();
+        //gotten from baeldung.com
+        //https://www.baeldung.com/java-http-request
+        URL url = new URL("https://api.spotify.com/v1/artists/"+id+"/albums?include_groups=album%2Csingle&market="+country);
+        System.out.println("URL: " + url);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        System.out.println("Connection established: " + con);
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Authorization", "Bearer "+ tokens[0]); 
+        System.out.println("connection: " + con);
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        System.out.println("Artist Albums Response: " + response.toString());
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(response.toString());
+    }
+
     @GetMapping("/tracks/{id}")
     public ResponseEntity<String> trackInfo(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID, @PathVariable("id") String id, @RequestParam("country") String country) throws IOException {
         File tokenFile = new File("D:\\SpotifyUsers\\"+sessionID+".txt");
@@ -295,11 +357,51 @@ public class SpotifyController {
             response.append(inputLine);
         }
         in.close();
-        System.out.println("Album Response: " + response.toString());
+        //System.out.println("Album Response: " + response.toString());
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
             .body(response.toString());
+    }
+
+    @GetMapping("/albums/{id}/tracks")
+    public ResponseEntity<String> albumSongsInfo(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID, @PathVariable("id") String id, @RequestParam("country") String country, @RequestParam("trackCount") Integer trackCount) throws IOException {
+        File tokenFile = new File("D:\\SpotifyUsers\\"+sessionID+".txt");
+        Scanner readTokenFile = new Scanner(tokenFile);
+        String data = readTokenFile.nextLine();
+        String tokens[] = data.split(":"); //tokens[0] = access_token, tokens[1] = refresh_token
+        readTokenFile.close();
+        int offset = 0;
+        ArrayList<String> fullJson = new ArrayList<String>();
+        //gotten from baeldung.com
+        //https://www.baeldung.com/java-http-request
+        while(true){
+            if(offset > trackCount) {break;}
+            URL url = new URL("https://api.spotify.com/v1/albums/"+id+"/tracks?market="+country+"&limit="+50+"&offset="+offset);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Authorization", "Bearer "+ tokens[0]); 
+            System.out.println("connection: " + con);
+            int responseCode = con.getResponseCode();
+            System.out.println("response code: " + responseCode);
+            if(responseCode==200){
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+                StringBuilder response = new StringBuilder();
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                fullJson.add(response.toString());
+                System.out.println("Complete TrackList Progress: "+fullJson);
+                offset+=50;
+            }
+        }
+        System.out.println("AlbumTracks Response: " + fullJson);
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(fullJson.toString());
     }
 
     @PostMapping("/search")

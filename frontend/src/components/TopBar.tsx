@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import fetchSearch from '../fetches/search';
 import { useMiddle } from './MiddleContext';
 import homeIcon from 'D:/SpotifyApp/frontend/src/assets/home.svg';
-import { useSongSearch } from './songSearchContext';
+import { useSongSearch } from './SongSearchContext';
 import { useProfile } from './ProfileContext';
 
 export const TopBar = () => {
@@ -31,6 +31,9 @@ export const TopBar = () => {
     const [debounceSearch,setDebounceSearch] = useState("")
     useEffect(() => {
         const search = setTimeout (() => {
+            if(middleValue != 0) {
+                changeValue(0)
+            }
             fetchSearch(debounceSearch,changeSearch,profileContent)
             const searchDataString = debounceSearch
             if (searchDataString != null && searchDataString != ""){

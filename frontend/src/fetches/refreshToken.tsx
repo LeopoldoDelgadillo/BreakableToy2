@@ -9,8 +9,8 @@ export const refreshToken = () => {
                 if(Timer != null){
                     const NumTimer = +Timer
                     console.log("set Timer: ",NumTimer)
-                    console.log("Refresh in: ",(NumTimer+3000000)-(Date.now()))
-                    if((NumTimer+3000000)-(Date.now()) <= 0) {
+                    console.log("Refresh in: ",(NumTimer+1800000)-(Date.now()))
+                    if((NumTimer+1800000)-(Date.now()) <= 0) {
                         fetch("http://127.0.0.1:9090/token/refresh", {
                             method: 'GET',
                             credentials: 'include',

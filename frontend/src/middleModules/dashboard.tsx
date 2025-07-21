@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTop10 } from "../components/Top10Context";
-import { useSongSearch } from "../components/songSearchContext";
+import { useSongSearch } from "../components/SongSearchContext";
 import { useMiddle } from "../components/MiddleContext";
 import { useIdentifier } from "../components/IdentifierContext";
 
@@ -16,9 +16,13 @@ type searched = {
 };
 
 type top10 = {
+    id: string;
     name: string;
     followers: number;
     image: string;
+    type: string;
+    middleFunc: (val:number) => void
+    identifierFunc: (val:string[]) => void
 }
 
 const SearchedArray = ({ name, artists, image, id, followers, type, middleFunc,identifierFunc}: searched) => (
@@ -33,8 +37,8 @@ const SearchedArray = ({ name, artists, image, id, followers, type, middleFunc,i
     </button>
 )
 
-const Top10Artists = ({name, followers, image}: top10) => (
-    <button className="p-4 m-3 bg-gray-800 rounded-lg shadow-md text-white hover:bg-gray-700 transition grid grid-cols-4 flex max-h-[100px] min-w-[200px]">
+const Top10Artists = ({name, followers, image, id, type, middleFunc,identifierFunc}: top10) => (
+    <button onClick={() => clicked(id,type,middleFunc,identifierFunc,)} className="p-4 m-3 bg-gray-800 rounded-lg shadow-md text-white hover:bg-gray-700 transition grid grid-cols-4 flex max-h-[100px] min-w-[200px]">
         <div className="grid col-start-1 items-center"><img src={image} className="rounded-lg w-[64px] h-[64px]"></img></div>
         <div className="grid col-start-2 col-span-4 ml-2">
             <p className="text-[13px]">{name}</p>
@@ -104,7 +108,7 @@ function dashboard() {
 
     },[searchedSong])
     
-    
+        
     return(
         <div className="relative overflow-auto">
             <h1 className="text-[25px] ml-3 mb-2 mt-2 flex justify-center items-center">Your Top 10 Artists</h1>
@@ -117,6 +121,10 @@ function dashboard() {
                             name={artist.name}
                             followers={artist.followers.total}
                             image={artist.images[0]?.url || "D:\\SpotifyApp\\frontend\\src\\assets\\encoraLogo.svg"} 
+                            id={artist.id}
+                            type={artist.type}
+                            middleFunc={changeValue}
+                            identifierFunc={changeIdentifier}
                         />  
                     ))}
                 </div>

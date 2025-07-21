@@ -1,7 +1,7 @@
 import { useMiddle } from './MiddleContext'
 import Profile from '../middleModules/profile'
 import Dashboard from '../middleModules/dashboard'
-import AlbumSongArtist from '../middleModules/AlbumOrSong'
+import AlbumSongArtist from '../middleModules/albumOrSong'
 export const Middle = () => {
 
     const { middleValue } = useMiddle()
