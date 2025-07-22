@@ -9,7 +9,7 @@ function displayProfile() {
     return(
         <div>
         {myProfile ? (
-            <div className="border-[2px] grid grid-cols-2 flex items-center">
+            <div className="grid grid-cols-2 flex items-center">
                 <div >
                     <img src={`${myProfile.images[0].url}`} className={`rounded-full max-w-${myProfile.images[0].width} max-h-${myProfile.images[0].height}`}></img>
                 </div>

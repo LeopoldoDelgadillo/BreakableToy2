@@ -20,8 +20,8 @@ const TopSongs = ({ trackNumber, name, image, durationMinutes, durationSeconds}:
     <tr>
         <td className="w-[10%] mr-[10px] hover: ">{trackNumber}</td>
         <td className="w-[10%] min-w-[90px] flex justify-center "><img src={image} className="rounded-lg w-[64px] h-[64px]"></img></td>
-        <td className="w-[75%]">{name}</td>
-        <td className="w-[10%]">{durationMinutes}:{durationSeconds}</td>
+        <td className="w-full">{name}</td>
+        <td className="w-[10%]">{durationMinutes}:{durationSeconds >= 10 ? durationSeconds : "0"+durationSeconds}</td>
     </tr>
 )
 
