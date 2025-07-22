@@ -105,8 +105,9 @@ function albumSongArtist() {
                         })
                 })
         }
-        if(identifierValue[1] === "album"  || identifierValue[1] ===  "single") {
+        else if(identifierValue[1] === "album"  || identifierValue[1] ===  "single") {
             console.log(identifierValue[1],"selected")
+            console.log(identifierValue[0])
             fetchAlbum(identifierValue[0], profileContent)
                 .then(fetched => {
                     console.log("fetched info:",fetched)
@@ -118,7 +119,8 @@ function albumSongArtist() {
     
     useEffect (() => {
         console.log("selected info:",selected)
-        if(identifierValue[1] === "album"  || identifierValue[1] ===  "single") {
+        console.log(identifierValue[1])
+        if((identifierValue[1] === "album"  || identifierValue[1] ===  "single") && selected != undefined) {
             fetchAlbumTracks(identifierValue[0],profileContent,selected.total_tracks)
                 .then(fetched => {
                     setSelectedAlbumSongs(fetched)
@@ -158,26 +160,28 @@ function albumSongArtist() {
                                 </div>
                             </div>
                             <div className="flex justify-center flex-col">
-                                <div className="overflow-auto h-[265px] border-[1px] border-gray-800 flex justify-center ml-[10px] mr-[10px]">
-                                    <table className="table-fixed mr-[25px] ml-[15px] mt-[5px] mb-[5px]">
-                                        <tbody>
-                                            {selectedAlbumSongs.map((block)=> (
-                                                block.items.map((track: any) => (
-                                                <AlbumSongs
-                                                    key={track.id}
-                                                    trackNumber={track.track_number}
-                                                    name={track.name}
-                                                    artists={track.artists.map((artist: any) => (
-                                                        artist.name+", "
-                                                    ))}
-                                                    durationMinutes={Math.floor(track.duration_ms/60000)}
-                                                    durationSeconds={Math.floor((track.duration_ms/60000-Math.floor(track.duration_ms/60000))*60)}
-                                                />
-                                                ))
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
+                                {selectedAlbumSongs.length > 0 ? (
+                                    <div className="overflow-auto h-[265px] border-[1px] border-gray-800 flex justify-center ml-[10px] mr-[10px]">
+                                        <table className="table-fixed mr-[25px] ml-[15px] mt-[5px] mb-[5px]">
+                                            <tbody>
+                                                {selectedAlbumSongs.map((block)=> (
+                                                    block.items.map((track: any) => (
+                                                    <AlbumSongs
+                                                        key={track.id}
+                                                        trackNumber={track.total_tracks}
+                                                        name={track.name}
+                                                        artists={track.artists.map((artist: any) => (
+                                                            artist.name+", "
+                                                        ))}
+                                                        durationMinutes={Math.floor(track.duration_ms/60000)}
+                                                        durationSeconds={Math.floor((track.duration_ms/60000-Math.floor(track.duration_ms/60000))*60)}
+                                                    />
+                                                    ))
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div> ) :(<h1>Loading tracks...</h1>)
+                                }
                             </div>
                         </> ) :
                      identifierValue[1] === "track" ? (
@@ -243,7 +247,7 @@ function albumSongArtist() {
                                                     key={trackAlbum.id}
                                                     name={trackAlbum.name}
                                                     image={trackAlbum.images[0]?.url}
-                                                    type={trackAlbum.album_type}
+                                                    type={trackAlbum.type}
                                                     release={trackAlbum.release_date}
                                                     id={trackAlbum.id}
                                                     identifierFunc={changeIdentifier}

@@ -61,9 +61,9 @@ public class SpotifyController {
         String url = "https://accounts.spotify.com/api/token";
         String response = userService.requestHTTPspotifyAPI(sessionID, url, code,"authSpotify",null,"Not needed","Not needed");
         
-        File tokenFile = new File("Users/leopoldo.delgadillo/documents/SpotifyUsers/"+sessionID+".txt");
+        File tokenFile = new File("/Users/leopoldo.delgadillo/Documents/SpotifyUsers/"+sessionID+".txt");
         tokenFile.createNewFile();
-        FileWriter writeToTokenFile = new FileWriter("D:\\SpotifyUsers\\"+sessionID+".txt");
+        FileWriter writeToTokenFile = new FileWriter("/Users/leopoldo.delgadillo/Documents/SpotifyUsers/"+sessionID+".txt");
         writeToTokenFile.write(new JSONObject(response).getString("access_token"));
         writeToTokenFile.write(":");
         writeToTokenFile.write(new JSONObject(response).getString("refresh_token"));
