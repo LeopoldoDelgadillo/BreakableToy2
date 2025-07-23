@@ -3,10 +3,8 @@ package com.spotiapp.demo.service;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -16,27 +14,20 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.yaml.snakeyaml.Yaml;
-
 import com.spotiapp.demo.ParameterStringBuilder;
 
 @Service
 public class UserService {
-    
-    public String[] extractClientIDSecret() throws FileNotFoundException {
-    Yaml yaml = new Yaml();
-    InputStream inputStream = new FileInputStream("D:/SpotifyIDs.yml");
-    HashMap yamlMap = yaml.load(inputStream);
-    String[] clientCreds = {"clientID","clientSecret"};
-    clientCreds[0] = yamlMap.get("clientID").toString();
-    clientCreds[1] = yamlMap.get("clientSecret").toString();
-        return clientCreds;
-    }
+    @Value("${spotify.client_id}")
+    private String clientID;
 
+    @Value("${spotify.client_secret}")
+    private String clientSecret;
+    
     public String[] readUserTokenFile(String sessionID) throws FileNotFoundException {
-        File tokenFile = new File("D:/SpotifyUsers/"+sessionID+".txt");
+        File tokenFile = new File("/Users/leopoldo.delgadillo/Documents/SpotifyUsers/"+sessionID+".txt");
         Scanner readTokenFile = new Scanner(tokenFile);
         String data = readTokenFile.nextLine();
         String[] tokens = data.split(":"); //tokens[0] = access_token, tokens[1] = secret_tokens
@@ -45,7 +36,8 @@ public class UserService {
     }
 
     public String requestHTTPspotifyAPI(String sessionID, String stringUrl, String code, String endpoint, Integer trackCount, String country, String id) throws IOException {
-        String[] clientCred = extractClientIDSecret();
+        
+        String[] clientCred = {clientID,clientSecret};
         String[] tokens = {"access_token","refresh_token"};
         if(!endpoint.equals("authSpotify")){tokens = readUserTokenFile(sessionID);}
         StringBuilder response = new StringBuilder();

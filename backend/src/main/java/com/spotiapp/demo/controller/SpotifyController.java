@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,11 @@ import java.util.stream.Collectors;
 @RestController
 @CrossOrigin(origins = "http://127.0.0.1:8080", allowCredentials = "true")
 public class SpotifyController {
+    @Value("${spotify.client_id}")
+    private String clientID;
+
+    @Value("${spotify.client_secret}")
+    private String clientSecret;
     String accessTokenStream = null;
 
     @Autowired
@@ -33,12 +39,12 @@ public class SpotifyController {
         String encodedURL = "";
         if(sessionID.equals("Atta")) {
             System.out.println("Not logged in yet");
-            String[] tokens = userService.extractClientIDSecret();
+            String[] clientCred = {clientID,clientSecret};
 
             //Gotten from StackOverflow
             //https://stackoverflow.com/questions/73810586/can-someone-tell-me-how-can-i-get-query-parameters-from-a-url-in-java-that-may-c
             Map<String, String> requestParams = new HashMap<>();
-            requestParams.put("client_id", tokens[0]);
+            requestParams.put("client_id", clientCred[0]);
             requestParams.put("response_type", "code");
             requestParams.put("scope", "user-read-private user-read-email user-top-read user-follow-read");
             requestParams.put("redirect_uri", "http://127.0.0.1:8080/redirect");
