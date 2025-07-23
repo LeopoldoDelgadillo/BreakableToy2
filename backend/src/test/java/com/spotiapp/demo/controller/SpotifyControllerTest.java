@@ -43,8 +43,6 @@ public class SpotifyControllerTest {
                     "items": [{"name": "top1"}]
                 }
                 """;
-
-        when(userService.extractClientIDSecret()).thenReturn(client);
         when(userService.readUserTokenFile(sessionID)).thenReturn(user);
         when(userService.requestHTTPspotifyAPI(sessionID, url, "Not needed", "generic", null, "Not needed", "Not needed")).thenReturn(response);
         mockMvc.perform(get("/me/top/artists")
@@ -68,7 +66,6 @@ public class SpotifyControllerTest {
                 }
                 """;
 
-        when(userService.extractClientIDSecret()).thenReturn(client);
         when(userService.readUserTokenFile(sessionID)).thenReturn(user);
         when(userService.requestHTTPspotifyAPI(sessionID, url, "Not needed", "generic", null, "Not needed", "Not needed")).thenReturn(response);
         mockMvc.perform(get("/artists/"+id)
@@ -106,7 +103,6 @@ public class SpotifyControllerTest {
                     ]
                 }
                 """;
-        when(userService.extractClientIDSecret()).thenReturn(client);
         when(userService.readUserTokenFile(sessionID)).thenReturn(user);
         when(userService.requestHTTPspotifyAPI(sessionID, url, "Not needed", "generic", null, "Not needed", "Not needed")).thenReturn(response);
         mockMvc.perform(get("/artists/"+id+"/top-tracks?country="+userCountry)
@@ -149,7 +145,6 @@ public class SpotifyControllerTest {
                     ]
                 }
                 """;
-        when(userService.extractClientIDSecret()).thenReturn(client);
         when(userService.readUserTokenFile(sessionID)).thenReturn(user);
         when(userService.requestHTTPspotifyAPI(sessionID, url, "Not needed", "generic", null, "Not needed", "Not needed")).thenReturn(response);
         mockMvc.perform(get("/artists/"+id+"/albums?country="+userCountry)
@@ -196,7 +191,6 @@ public class SpotifyControllerTest {
                     "type": "track",
                 }
                 """;
-        when(userService.extractClientIDSecret()).thenReturn(client);
         when(userService.readUserTokenFile(sessionID)).thenReturn(user);
         when(userService.requestHTTPspotifyAPI(sessionID, url, "Not needed", "generic", null, "Not needed", "Not needed")).thenReturn(response);
         mockMvc.perform(get("/tracks/"+id+"?country="+userCountry)
@@ -252,7 +246,6 @@ public class SpotifyControllerTest {
                     }
                 }
                 """;
-        when(userService.extractClientIDSecret()).thenReturn(client);
         when(userService.readUserTokenFile(sessionID)).thenReturn(user);
         when(userService.requestHTTPspotifyAPI(sessionID, url, "Not needed", "generic", null, "Not needed", "Not needed")).thenReturn(response);
         mockMvc.perform(get("/albums/"+id+"?country="+userCountry)
@@ -299,7 +292,6 @@ public class SpotifyControllerTest {
                     ]
                 }]
                 """;
-        when(userService.extractClientIDSecret()).thenReturn(client);
         when(userService.readUserTokenFile(sessionID)).thenReturn(user);
         when(userService.requestHTTPspotifyAPI(sessionID, "", "Not needed", "albumTracks", trackCount, userCountry, id)).thenReturn(response);
         mockMvc.perform(get("/albums/"+id+"/tracks?country="+userCountry+"&trackCount="+trackCount)
@@ -345,7 +337,6 @@ public class SpotifyControllerTest {
                 }
             }
             """;
-        when(userService.extractClientIDSecret()).thenReturn(client);
         when(userService.readUserTokenFile(sessionID)).thenReturn(user);
         when(userService.requestHTTPspotifyAPI(sessionID, url, "Not needed", "generic", null, "Not needed", "Not needed")).thenReturn(response);
         mockMvc.perform(post("/search")
@@ -370,7 +361,6 @@ public class SpotifyControllerTest {
                 "type": "user"
             }
             """;
-        when(userService.extractClientIDSecret()).thenReturn(client);
         when(userService.readUserTokenFile(sessionID)).thenReturn(user);
         when(userService.requestHTTPspotifyAPI(sessionID, "https://api.spotify.com/v1/me", "Not needed", "generic", null, "Not needed", "Not needed")).thenReturn(response);
         mockMvc.perform(get("/me")
