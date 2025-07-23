@@ -82,7 +82,6 @@ function albumSongArtist() {
     useEffect (() => {
         if(identifierValue[1] === "track") {
             console.log(identifierValue[1],"selected")
-            console.log(identifierValue[0])
             fetchTrack(identifierValue[0], profileContent)
                 .then(fetched => {
                     console.log("fetched info:",fetched)

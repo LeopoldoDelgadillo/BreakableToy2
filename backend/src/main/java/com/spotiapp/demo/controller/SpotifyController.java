@@ -1,5 +1,6 @@
 package com.spotiapp.demo.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spotiapp.demo.service.UserService;
 
 import jakarta.servlet.http.Cookie;
@@ -53,7 +54,7 @@ public class SpotifyController {
     }
 
     @PostMapping("/auth/spotify")
-    public ResponseEntity<String> authResponse (@RequestBody String body, HttpServletResponse cookieResponse) throws IOException {
+    public ResponseEntity<Object> authResponse (@RequestBody String body, HttpServletResponse cookieResponse) throws IOException {
         JSONObject jsonObject = new JSONObject(body);
         String code = jsonObject.getString("code");
         String sessionID = jsonObject.getString("ID");
@@ -61,9 +62,9 @@ public class SpotifyController {
         String url = "https://accounts.spotify.com/api/token";
         String response = userService.requestHTTPspotifyAPI(sessionID, url, code,"authSpotify",null,"Not needed","Not needed");
         
-        File tokenFile = new File("/Users/leopoldo.delgadillo/Documents/SpotifyUsers/"+sessionID+".txt");
+        File tokenFile = new File("D:/SpotifyUsers/"+sessionID+".txt");
         tokenFile.createNewFile();
-        FileWriter writeToTokenFile = new FileWriter("/Users/leopoldo.delgadillo/Documents/SpotifyUsers/"+sessionID+".txt");
+        FileWriter writeToTokenFile = new FileWriter("D:/SpotifyUsers/"+sessionID+".txt");
         writeToTokenFile.write(new JSONObject(response).getString("access_token"));
         writeToTokenFile.write(":");
         writeToTokenFile.write(new JSONObject(response).getString("refresh_token"));
@@ -94,7 +95,7 @@ public class SpotifyController {
     }
 
     @GetMapping("/token/refresh")
-    public ResponseEntity<String> refreshToken(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID) throws IOException {
+    public ResponseEntity<Object> refreshToken(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID) throws IOException {
         String[] tokens = userService.readUserTokenFile(sessionID);
 
         String url = "https://accounts.spotify.com/api/token";
@@ -117,7 +118,7 @@ public class SpotifyController {
     }
 
     @GetMapping("/me/top/artists")
-    public ResponseEntity<String> top10(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID) throws IOException {
+    public ResponseEntity<Object> top10(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID) throws IOException {
         String url = "https://api.spotify.com/v1/me/top/artists?time_range=medium_term&limit=10&offset=0";
 
         String response = userService.requestHTTPspotifyAPI(sessionID, url,"Not needed","generic",null,"Not needed","Not needed");
@@ -130,7 +131,7 @@ public class SpotifyController {
     }
 
     @GetMapping("/artists/{id}")
-    public ResponseEntity<String> artistInfo(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID, @PathVariable("id") String id) throws IOException {
+    public ResponseEntity<Object> artistInfo(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID, @PathVariable("id") String id) throws IOException {
         String url = "https://api.spotify.com/v1/artists/"+id;
 
         String response = userService.requestHTTPspotifyAPI(sessionID, url,"Not needed","generic",null,"Not needed","Not needed");
@@ -143,7 +144,7 @@ public class SpotifyController {
     }
 
     @GetMapping("/artists/{id}/top-tracks")
-    public ResponseEntity<String> artistToptracksInfo(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID, @PathVariable("id") String id, @RequestParam("country") String country) throws IOException {
+    public ResponseEntity<Object> artistToptracksInfo(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID, @PathVariable("id") String id, @RequestParam("country") String country) throws IOException {
         String url = "https://api.spotify.com/v1/artists/"+id+"/top-tracks?market="+country;
 
         String response = userService.requestHTTPspotifyAPI(sessionID, url,"Not needed","generic",null,"Not needed","Not needed");
@@ -156,7 +157,7 @@ public class SpotifyController {
     }
 
     @GetMapping("/artists/{id}/albums")
-    public ResponseEntity<String> artistAlbumsInfo(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID, @PathVariable("id") String id, @RequestParam("country") String country) throws IOException {
+    public ResponseEntity<Object> artistAlbumsInfo(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID, @PathVariable("id") String id, @RequestParam("country") String country) throws IOException {
         String url = "https://api.spotify.com/v1/artists/"+id+"/albums?include_groups=album%2Csingle&market="+country;
 
         String response = userService.requestHTTPspotifyAPI(sessionID, url, "Not needed", "generic", null,"Not needed","Not needed");
@@ -169,7 +170,7 @@ public class SpotifyController {
     }
 
     @GetMapping("/tracks/{id}")
-    public ResponseEntity<String> trackInfo(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID, @PathVariable("id") String id, @RequestParam("country") String country) throws IOException {
+    public ResponseEntity<Object> trackInfo(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID, @PathVariable("id") String id, @RequestParam("country") String country) throws IOException {
         String url = "https://api.spotify.com/v1/tracks/"+id+"?market="+country;
 
         String response = userService.requestHTTPspotifyAPI(sessionID, url,"Not needed", "generic", null,"Not needed","Not needed");
@@ -182,7 +183,7 @@ public class SpotifyController {
     }
 
     @GetMapping("/albums/{id}")
-    public ResponseEntity<String> albumInfo(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID, @PathVariable("id") String id, @RequestParam("country") String country) throws IOException {
+    public ResponseEntity<Object> albumInfo(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID, @PathVariable("id") String id, @RequestParam("country") String country) throws IOException {
         String url = "https://api.spotify.com/v1/albums/"+id+"?market="+country;
 
         String response = userService.requestHTTPspotifyAPI(sessionID, url, "Not needed", "generic", null,"Not needed","Not needed");
@@ -195,18 +196,20 @@ public class SpotifyController {
     }
 
     @GetMapping("/albums/{id}/tracks")
-    public ResponseEntity<String> albumSongsInfo(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID, @PathVariable("id") String id, @RequestParam("country") String country, @RequestParam("trackCount") Integer trackCount) throws IOException {
-        String response = userService.requestHTTPspotifyAPI(sessionID, "", "Nothing", "albumTracks", trackCount, country, id);
+    public ResponseEntity<Object> albumSongsInfo(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID, @PathVariable("id") String id, @RequestParam("country") String country, @RequestParam("trackCount") Integer trackCount) throws IOException {
+        String response = userService.requestHTTPspotifyAPI(sessionID, "", "Not needed", "albumTracks", trackCount, country, id);
         
         System.out.println("AlbumTracks Response: " + response);
+        ObjectMapper mapper = new ObjectMapper();
+        Object json = mapper.readValue(response, Object.class);
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(response);
+            .body(json);
     }
 
     @PostMapping("/search")
-    public ResponseEntity<String> search(@RequestBody String body, @CookieValue(value="sessionID",defaultValue = "Atta")String sessionID) throws IOException {
+    public ResponseEntity<Object> search(@RequestBody String body, @CookieValue(value="sessionID",defaultValue = "Atta")String sessionID) throws IOException {
         JSONObject jsonObject = new JSONObject(body);
         String searchString = jsonObject.getString("searchString");
         String userCountry = jsonObject.getString("userCountry");
@@ -223,7 +226,7 @@ public class SpotifyController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<String> getUserProfile(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID) throws IOException {
+    public ResponseEntity<Object> getUserProfile(@CookieValue(value="sessionID",defaultValue = "Atta") String sessionID) throws IOException {
         String url = "https://api.spotify.com/v1/me";
 
         String response = userService.requestHTTPspotifyAPI(sessionID, url,"Not needed","generic",null,"Not needed","Not needed");

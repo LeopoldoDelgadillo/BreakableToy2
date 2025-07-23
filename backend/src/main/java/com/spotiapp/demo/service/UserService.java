@@ -27,7 +27,7 @@ public class UserService {
     
     public String[] extractClientIDSecret() throws FileNotFoundException {
     Yaml yaml = new Yaml();
-    InputStream inputStream = new FileInputStream("/Users/leopoldo.delgadillo/Documents/SpotifyIDs.yml");
+    InputStream inputStream = new FileInputStream("D:/SpotifyIDs.yml");
     HashMap yamlMap = yaml.load(inputStream);
     String[] clientCreds = {"clientID","clientSecret"};
     clientCreds[0] = yamlMap.get("clientID").toString();
@@ -36,7 +36,7 @@ public class UserService {
     }
 
     public String[] readUserTokenFile(String sessionID) throws FileNotFoundException {
-        File tokenFile = new File("/Users/leopoldo.delgadillo/Documents/SpotifyUsers/"+sessionID+".txt");
+        File tokenFile = new File("D:/SpotifyUsers/"+sessionID+".txt");
         Scanner readTokenFile = new Scanner(tokenFile);
         String data = readTokenFile.nextLine();
         String[] tokens = data.split(":"); //tokens[0] = access_token, tokens[1] = secret_tokens
@@ -46,7 +46,7 @@ public class UserService {
 
     public String requestHTTPspotifyAPI(String sessionID, String stringUrl, String code, String endpoint, Integer trackCount, String country, String id) throws IOException {
         String[] clientCred = extractClientIDSecret();
-        String[] tokens = {};
+        String[] tokens = {"access_token","refresh_token"};
         if(!endpoint.equals("authSpotify")){tokens = readUserTokenFile(sessionID);}
         StringBuilder response = new StringBuilder();
         
@@ -79,26 +79,24 @@ public class UserService {
                 out.writeBytes(ParameterStringBuilder.getParamsString(parameters));
                 out.flush();
                 out.close();
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
                     response.append(inputLine);
                 }
                 in.close();
             }
-        else if(endpoint == "generic"){
-            con.setRequestMethod("GET");
-            con.setRequestProperty("Authorization", "Bearer "+ tokens[0]); 
-            System.out.println("connection: " + con);
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
+            else if(endpoint == "generic"){
+                con.setRequestMethod("GET");
+                con.setRequestProperty("Authorization", "Bearer "+ tokens[0]); 
+                System.out.println("connection: " + con);
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
+                String inputLine;
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
             }
-            in.close();
-        } 
         }
         
         else if(endpoint == "albumTracks"){
@@ -128,6 +126,7 @@ public class UserService {
                 }
             }
             response.append(fullJson);
+            
         }
         return response.toString();
     }
