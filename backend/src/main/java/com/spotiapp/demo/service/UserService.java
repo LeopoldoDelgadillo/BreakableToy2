@@ -27,7 +27,7 @@ public class UserService {
     
     public String[] extractClientIDSecret() throws FileNotFoundException {
     Yaml yaml = new Yaml();
-    InputStream inputStream = new FileInputStream("D:/SpotifyIDs.yml");
+    InputStream inputStream = new FileInputStream("/Users/leopoldo.delgadillo/Documents/SpotifyIDs.yml");
     HashMap yamlMap = yaml.load(inputStream);
     String[] clientCreds = {"clientID","clientSecret"};
     clientCreds[0] = yamlMap.get("clientID").toString();
@@ -36,7 +36,7 @@ public class UserService {
     }
 
     public String[] readUserTokenFile(String sessionID) throws FileNotFoundException {
-        File tokenFile = new File("D:\\SpotifyUsers\\"+sessionID+".txt");
+        File tokenFile = new File("/Users/leopoldo.delgadillo/Documents/SpotifyUsers/"+sessionID+".txt");
         Scanner readTokenFile = new Scanner(tokenFile);
         String data = readTokenFile.nextLine();
         String[] tokens = data.split(":"); //tokens[0] = access_token, tokens[1] = secret_tokens

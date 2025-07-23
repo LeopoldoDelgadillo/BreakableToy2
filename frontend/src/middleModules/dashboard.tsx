@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTop10 } from "../components/Top10Context";
-import { useSongSearch } from "../components/SongSearchContext";
+import { useSongSearch } from "../components/songSearchContext";
 import { useMiddle } from "../components/MiddleContext";
 import { useIdentifier } from "../components/IdentifierContext";
 
@@ -32,7 +32,7 @@ const SearchedArray = ({ name, artists, image, id, followers, type, middleFunc,i
             <p className="text-[13px]">{name}</p>
             {artists.length > 0 && (<p className="text-[13px]">By: {artists.join(", ")}</p>)}
             {followers != undefined && (<p className="text-[13px]">Followers: {followers}</p>)}
-            <p className="text-[13px]">ID: {id}</p>
+            {type === "album" || type === "single" && (<p className="text-[13px]">Type: {type}</p>)}
         </div>
     </button>
 )
@@ -53,7 +53,7 @@ function clicked(id:string, type: string, midFunc: (val: number) => void, idFunc
             else if(type === "artist") {
                 idFunc([id,type])
             }
-            else if(type === "album") {
+            else if(type === "album" || type === "single") {
                 idFunc([id,type])
             }
             midFunc(2)
@@ -107,8 +107,10 @@ function dashboard() {
         }
 
     },[searchedSong])
-    
-        
+
+    useEffect(() => {
+        console.log("albumList: ",albumList)
+    },[albumList])
     return(
         <div className="relative overflow-auto">
             <h1 className="text-[25px] ml-3 mb-2 mt-2 flex justify-center items-center">Your Top 10 Artists</h1>
@@ -182,7 +184,7 @@ function dashboard() {
                                 image={album.images[0]?.url || "D:\\SpotifyApp\\frontend\\src\\assets\\encoraLogo.svg"} 
                                 artists={album.artists.map((a: any) => a.name)} 
                                 followers={undefined}
-                                type={album.type}
+                                type={album.album_type}
                                 middleFunc={changeValue}
                                 identifierFunc={changeIdentifier}
                             />

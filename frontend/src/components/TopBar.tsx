@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react';
 import fetchSearch from '../fetches/search';
 import { useMiddle } from './MiddleContext';
-import homeIcon from 'D:/SpotifyApp/frontend/src/assets/home.svg';
-import { useSongSearch } from './SongSearchContext';
+import homeIcon from '../assets/home.svg';
+import { useSongSearch } from './songSearchContext';
 import { useProfile } from './ProfileContext';
 
 export const TopBar = () => {
