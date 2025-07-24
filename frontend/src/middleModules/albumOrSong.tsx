@@ -18,7 +18,7 @@ type topSongs = {
 
 const TopSongs = ({ trackNumber, name, image, durationMinutes, durationSeconds}: topSongs) => (
     <tr>
-        <td className="w-[10%] mr-[10px] hover: ">{trackNumber}</td>
+        <td className="w-[10%] mr-[10px]">{trackNumber}</td>
         <td className="w-[10%] min-w-[90px] flex justify-center "><img src={image} className="rounded-lg w-[64px] h-[64px]"></img></td>
         <td className="w-full">{name}</td>
         <td className="w-[10%]">{durationMinutes}:{durationSeconds >= 10 ? durationSeconds : "0"+durationSeconds}</td>
@@ -55,7 +55,7 @@ type albumSongs = {
 
 const AlbumSongs = ({ trackNumber, name, artists, durationMinutes, durationSeconds}: albumSongs) => (
     <tr className="h-[30px]">
-        <td className="flex justify-center min-w-[30px] max-w-[15%]">{trackNumber}</td>
+        <td className="min-w-[30px] max-w-[15%]">{trackNumber}</td>
         <td className="w-[70%]">
             <div className="flex-col">
                 <p>{name}</p>
