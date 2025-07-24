@@ -167,7 +167,7 @@ function albumSongArtist() {
                                                     block.items.map((track: any) => (
                                                     <AlbumSongs
                                                         key={track.id}
-                                                        trackNumber={track.total_tracks}
+                                                        trackNumber={track.track_number}
                                                         name={track.name}
                                                         artists={track.artists.map((artist: any) => (
                                                             artist.name+", "
