@@ -3,6 +3,7 @@ import { useTop10 } from "../components/Top10Context";
 import { useSongSearch } from "../components/songSearchContext";
 import { useMiddle } from "../components/MiddleContext";
 import { useIdentifier } from "../components/IdentifierContext";
+import followArtistIcon from "../assets/followArtistIcon.svg";
 
 type searched = {
   id: string;
@@ -26,9 +27,9 @@ type top10 = {
 }
 
 const SearchedArray = ({ name, artists, image, id, followers, type, middleFunc,identifierFunc}: searched) => (
-    <button onClick={() => clicked(id,type,middleFunc,identifierFunc)} className="p-4 m-2 bg-gray-800 rounded-lg shadow-md text-white hover:bg-gray-700 transition grid grid-cols-4 flex max-h-[500px] overflow-auto">
-        <div className="grid col-start-1 items-center"><img src={image} className="rounded-lg w-[64px] h-[64px]"></img></div>
-        <div className="grid col-start-2 col-span-4">
+    <button onClick={() => clicked(id,type,middleFunc,identifierFunc)} className="p-4 m-2 bg-gray-800 rounded-lg shadow-md text-white hover:bg-gray-700 transition grid grid-cols-4 grid-rows-4">
+        <div className="grid col-start-1 row-span-4 items-center"><img src={image} className="rounded-lg w-[64px] h-[64px]"></img></div>
+        <div className="grid col-start-2  row-start-2 row-span-2 col-span-4">
             <p className="text-[13px]">{name}</p>
             {artists.length > 0 && (<p className="text-[13px]">By: {artists.join(", ")}</p>)}
             {followers != undefined && (<p className="text-[13px]">Followers: {followers}</p>)}
@@ -139,14 +140,14 @@ function dashboard() {
                 <div className="SearchResults flex items-center justify-center grid grid-cols-3">
                     <div>
                         <h1 className="text-[20px] flex items-center justify-center">Songs</h1>
-                        <div className={"relative border-[1px] border-gray-800 flex-col max-h-[500px] overflow-auto"}>
+                        <div className={"relative border-[1px] border-gray-800 flex-col flex justify-items max-h-[500px] overflow-auto"}>
                         {songList.map((song, idx) => (
                             <SearchedArray
                                 id={song.id}
                                 key={`${song.id}-${idx}`}
                                 name={song.name}
                                 artists={song.artists.map((a: any) => a.name)}
-                                image={song.album.images[0]?.url || "D:\\SpotifyApp\\frontend\\src\\assets\\encoraLogo.svg"} 
+                                image={song?.album?.images?.[1]?.url ? song.album.images[1].url : followArtistIcon} 
                                 followers={undefined}
                                 type={song.type}
                                 middleFunc={changeValue}
@@ -157,13 +158,13 @@ function dashboard() {
                     </div>
                     <div>
                         <h1 className="text-[20px] flex items-center justify-center">Artists</h1>
-                        <div className={"relative border-[1px] border-gray-800 flex-col max-h-[500px] overflow-auto"}>
+                        <div className={"relative border-[1px] border-gray-800 flex-col flex justify-items max-h-[500px] overflow-auto"}>
                         {artistList.map((artist, idx) => (
                             <SearchedArray
                                 id={artist.id}
                                 key={`${artist.id}-${idx}`}
                                 name={artist.name}
-                                image={artist.images[0]?.url || "D:\\SpotifyApp\\frontend\\src\\assets\\encoraLogo.svg"} 
+                                image={artist?.images?.[1]?.url ? artist.images[1].url : followArtistIcon} 
                                 followers={artist.followers.total}   
                                 artists={[]} 
                                 type={artist.type}
@@ -175,13 +176,13 @@ function dashboard() {
                     </div>
                     <div>
                         <h1 className="text-[20px] flex items-center justify-center">Albums</h1>
-                        <div className={"relative border-[1px] border-gray-800 flex-col max-h-[500px] overflow-auto"}>
+                        <div className={"relative border-[1px] border-gray-800 flex-col flex justify-items max-h-[500px] overflow-auto"}>
                         {albumList.map((album, idx) => (
                             <SearchedArray
                                 id={album.id}
                                 key={`${album.id}-${idx}`}
                                 name={album.name}
-                                image={album.images[0]?.url || "D:\\SpotifyApp\\frontend\\src\\assets\\encoraLogo.svg"} 
+                                image={album?.images?.[1]?.url ? album.images[1].url : followArtistIcon} 
                                 artists={album.artists.map((a: any) => a.name)} 
                                 followers={undefined}
                                 type={album.album_type}

@@ -24,12 +24,15 @@ import java.util.stream.Collectors;
 @RestController
 @CrossOrigin(origins = "http://127.0.0.1:8080", allowCredentials = "true")
 public class SpotifyController {
+
     @Value("${spotify.client_id}")
     private String clientID;
 
     @Value("${spotify.client_secret}")
     private String clientSecret;
-    String accessTokenStream = null;
+
+    @Value("${app.spotifySessions}")
+    private String sessionsFolder;
 
     @Autowired
     private UserService userService;
@@ -67,8 +70,12 @@ public class SpotifyController {
 
         String url = "https://accounts.spotify.com/api/token";
         String response = userService.requestHTTPspotifyAPI(sessionID, url, code,"authSpotify",null,"Not needed","Not needed");
-        String tmpDir = System.getProperty("java.io.tmpdir");
-        File tokenFile = new File(tmpDir, sessionID+".txt");
+
+        File uploadPath = new File(sessionsFolder);
+        if (!uploadPath.exists()) {
+            uploadPath.mkdirs();
+        }
+        File tokenFile = new File(sessionsFolder, sessionID+".txt");
         tokenFile.createNewFile();
         FileWriter writeToTokenFile = new FileWriter(tokenFile);
         writeToTokenFile.write(new JSONObject(response).getString("access_token"));
@@ -108,8 +115,7 @@ public class SpotifyController {
 
         String response = userService.requestHTTPspotifyAPI(sessionID, url,"Not needed","tokenRefresh",null,"Not needed","Not needed");
         
-        String tmpDir = System.getProperty("java.io.tmpdir");
-        File TokenFile = new File(tmpDir, sessionID+".txt");
+        File TokenFile = new File(sessionsFolder, sessionID+".txt");
         FileWriter writeToTokenFile = new FileWriter(TokenFile,false);
         JSONObject json = new JSONObject(response);
         writeToTokenFile.write(json.getString("access_token"));

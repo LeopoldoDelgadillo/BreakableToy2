@@ -26,9 +26,12 @@ public class UserService {
     @Value("${spotify.client_secret}")
     private String clientSecret;
     
+    @Value("${app.spotifySessions}")
+    private String sessionsFolder;
+
     public String[] readUserTokenFile(String sessionID) throws FileNotFoundException {
-        String tmpDir = System.getProperty("java.io.tmpdir");
-        File tokenFile = new File(tmpDir, sessionID+".txt");
+        
+        File tokenFile = new File(sessionsFolder, sessionID+".txt");
         Scanner readTokenFile = new Scanner(tokenFile);
         String data = readTokenFile.nextLine();
         String[] tokens = data.split(":"); //tokens[0] = access_token, tokens[1] = secret_tokens

@@ -6,6 +6,9 @@ services:
     environment:
       - SPOTIFY_CLIENT_ID=${SPOTIFY_CLIENT_ID}
       - SPOTIFY_CLIENT_SECRET=${SPOTIFY_CLIENT_SECRET}
+      - SPOTIFY_SESSIONSFOLDER=/app/spotifySessions
+    volumes:
+      - ./uploads:/app/spotifySessions
     depends_on:
       - frontend
 

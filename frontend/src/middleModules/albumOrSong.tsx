@@ -7,6 +7,7 @@ import fetchArtist from "../fetches/fetchArtist"
 import fetchArtistTopTracks from "../fetches/fetchArtistTopTracks"
 import fetchArtistAlbums from "../fetches/fetchArtistAlbums"
 import fetchAlbumTracks from "../fetches/fetchAlbumTracks"
+import followArtistIcon from "../assets/followArtistIcon.svg"
 
 type topSongs = {
     trackNumber: number;
@@ -18,10 +19,10 @@ type topSongs = {
 
 const TopSongs = ({ trackNumber, name, image, durationMinutes, durationSeconds}: topSongs) => (
     <tr>
-        <td className="w-[10%] mr-[10px]">{trackNumber}</td>
-        <td className="w-[10%] min-w-[90px] flex justify-center "><img src={image} className="rounded-lg w-[64px] h-[64px]"></img></td>
-        <td className="w-full">{name}</td>
-        <td className="w-[10%]">{durationMinutes}:{durationSeconds >= 10 ? durationSeconds : "0"+durationSeconds}</td>
+        <td className="min-w-[30px]">{trackNumber}&nbsp;·&nbsp;</td>
+        <td className="min-w-[90px] flex justify-center "><img src={image} className="rounded-lg w-[64px] h-[64px]"></img></td>
+        <td className="">{name}</td>
+        <td className="min-w-[40px]">&nbsp;·&nbsp;{durationMinutes}:{durationSeconds >= 10 ? durationSeconds : "0"+durationSeconds}</td>
     </tr>
 )
 
@@ -40,7 +41,7 @@ const DisplayDiscography = ({name,image,type,release,id,identifierFunc}: display
         <div className="grid col-start-1 items-center"><img src={image} className="rounded-lg w-[64px] h-[64px]"></img></div>
         <div className="grid col-start-2 col-span-4">
             <p className="text-[13px]">{name}</p>
-            <p className="text-[13px]">{release}, {type}</p>
+            <p className="text-[13px]">{release}&nbsp;·&nbsp;{type}</p>
         </div>
     </button>
 )
@@ -48,21 +49,21 @@ const DisplayDiscography = ({name,image,type,release,id,identifierFunc}: display
 type albumSongs = {
     trackNumber: number;
     name: string;
-    artists: string;
+    artists: string[];
     durationMinutes: number;
     durationSeconds: number;
 }
 
 const AlbumSongs = ({ trackNumber, name, artists, durationMinutes, durationSeconds}: albumSongs) => (
     <tr className="h-[30px]">
-        <td className="min-w-[30px] max-w-[15%]">{trackNumber}</td>
-        <td className="w-[70%]">
+        <td className="min-w-[30px]">{trackNumber}&nbsp;·&nbsp;</td>
+        <td className="">
             <div className="flex-col">
                 <p>{name}</p>
-                <div className="flex text-[10px] whitespace-nowrap">{artists}</div>
+                <div className="flex text-[10px] whitespace-nowrap">{artists.join(", ")}</div>
             </div>
         </td>
-        <td className="flex justify-center min-w-[50px] max-w-[15%]">{durationMinutes}:{durationSeconds >= 10 ? durationSeconds : "0"+durationSeconds}</td>
+        <td className="min-w-[40px] ">&nbsp;·&nbsp;{durationMinutes}:{durationSeconds >= 10 ? durationSeconds : "0"+durationSeconds}</td>
     </tr>
 )
 
@@ -145,23 +146,23 @@ function albumSongArtist() {
                 <div className="flex flex-col justify-center items-center">
                     {identifierValue[1] === "album" || identifierValue[1] === "single" ? (
                         <>
-                            <div className="grid grid-cols-3 flex items-center">
-                                <div className="mt-[5px] mb-[5px]">
-                                    <img src={selected.images[1].url} className={`rounded-full max-w-${selected.images[1].width} max-h-${selected.images[1].height}`}></img>
+                            <div className="grid grid-cols-3 mt-[20px]">
+                                <div className="flex items-center justify-center">
+                                    <img src={selected?.images?.[1]?.url ? selected.images[1].url : followArtistIcon} className={"rounded-full"}></img>
                                 </div>
-                                <div className=" grid-rows-2 grid grid-rows-2 col-span-2 flex items-center">
+                                <div className="ml-[20px] flex justify-center flex-col col-span-2">
                                     <div className="text-[50px] row-start-1">
                                         {selected.name}
                                     </div>
                                     <div className="text-[30px] flex-row">
-                                        Artist: {selected?.artists?.[0]?.name ? selected.artists[0].name : "a"}, {selected.release_date}, {selected.total_tracks} songs
+                                        Artist: {selected?.artists?.[0]?.name ? selected.artists[0].name : "a"} · {selected.release_date} · {selected.total_tracks} songs
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex justify-center flex-col">
+                            <div className="flex justify-center flex-col mt-[10px]">
                                 {selectedAlbumSongs.length > 0 ? (
-                                    <div className="overflow-auto h-[265px] border-[1px] border-gray-800 flex justify-center ml-[10px] mr-[10px]">
-                                        <table className="table-fixed mr-[25px] ml-[15px] mt-[5px] mb-[5px]">
+                                    <div className="overflow-auto max-h-[400px] border-[1px] border-gray-800 flex justify-center">
+                                        <table className="table-fixed mr-[10px] ml-[15px] mt-[5px] mb-[5px]">
                                             <tbody>
                                                 {selectedAlbumSongs.map((block)=> (
                                                     block.items.map((track: any) => (
@@ -169,9 +170,7 @@ function albumSongArtist() {
                                                         key={track.id}
                                                         trackNumber={track.track_number}
                                                         name={track.name}
-                                                        artists={track.artists.map((artist: any) => (
-                                                            artist.name+", "
-                                                        ))}
+                                                        artists={track.artists.map((a: any) => a.name)}
                                                         durationMinutes={Math.floor(track.duration_ms/60000)}
                                                         durationSeconds={Math.floor((track.duration_ms/60000-Math.floor(track.duration_ms/60000))*60)}
                                                     />
@@ -184,31 +183,31 @@ function albumSongArtist() {
                             </div>
                         </> ) :
                      identifierValue[1] === "track" ? (
-                        <div className="grid grid-cols-3 flex items-center">
-                            <div className="mt-[5px] mb-[5px]">
-                                <img src={selected.album.images[1].url} className={`rounded-full max-w-${selected.album.images[1].width} max-h-${selected.album.images[1].height}`}></img>
+                        <div className="grid grid-cols-3 mt-[20px]">
+                            <div className="flex items-center justify-center">
+                                <img src={selected?.album?.images?.[1]?.url ? selected.album.images[1].url : followArtistIcon} className={"rounded-full"}></img>
                             </div>
-                            <div className="ml-[20px] grid grid-rows-2 col-span-2">
-                                <div className="text-[75px] row-start-1">
+                            <div className="ml-[20px] flex justify-center flex-col col-span-2">
+                                <div className="text-[50px]">
                                     {selected.name}
                                 </div>
-                                <div className="text-[35px] flex-row">
-                                    Artist: {selected?.artists?.[0]?.name ? selected.artists[0].name : "a"}, {selected.album.release_date}
+                                <div className="text-[30px] flex-row">
+                                    Artist: {selected?.artists?.[0]?.name ? selected.artists[0].name : "a"} · {selected.album.release_date}
                                 </div>
                             </div>
                         </div>
                      ) :
                      identifierValue[1] === "artist" ? (
                         <>
-                            <div className=" grid-cols-3 flex items-center">
-                                <div className="mt-[5px] mb-[5px]">
-                                    <img src={`${selected.images[1].url}`} className={`rounded-full max-w-${selected.images[1].width} max-h-${selected.images[1].height}`}></img>
+                            <div className="grid grid-cols-3 mt-[20px]">
+                                <div className="flex items-center justify-center">
+                                    <img src={`${selected?.images?.[1]?.url ? selected.images[1].url : followArtistIcon}`} className={"rounded-full"}></img>
                                 </div>
-                                <div className=" ml-[20px] grid grid-rows-2 col-span-2 flex items-center">
-                                    <div className="text-[75px]">
+                                <div className="ml-[20px] flex justify-center flex-col col-span-2">
+                                    <div className="text-[50px]">
                                         {selected.name}
                                     </div>
-                                    <div className="text-[50px]">
+                                    <div className="text-[30px]">
                                         {selected.followers.total} followers
                                     </div>
                                 </div>
@@ -217,14 +216,14 @@ function albumSongArtist() {
                                 <h1 className="text-[25px] flex justify-center mt-[20px]">Popular songs</h1>
                                 <div className="overflow-auto h-[265px] border-[1px] border-gray-800 flex justify-center ml-[10px] mr-[10px]">
                                     { topTracks.length > 0 ? (
-                                        <table className="table-fixed mr-[25px] ml-[15px] mt-[5px] mb-[5px]">
+                                        <table className="table-fixed mr-[10px] ml-[15px] mt-[5px] mb-[5px]">
                                             <tbody >
                                                 {topTracks.map((track,idx) => (
                                                     <TopSongs
                                                         key={`${track.id}-${idx}`}
                                                         trackNumber={idx+1}
                                                         name={track.name}
-                                                        image={track.album.images[0]?.url}
+                                                        image={track?.album?.images?.[0]?.url ? track.album.images[0].url : followArtistIcon}
                                                         durationMinutes={Math.floor(track.duration_ms/60000)}
                                                         durationSeconds={Math.floor((track.duration_ms/60000-Math.floor(track.duration_ms/60000))*60)}
 
@@ -245,7 +244,7 @@ function albumSongArtist() {
                                                     <DisplayDiscography
                                                     key={trackAlbum.id}
                                                     name={trackAlbum.name}
-                                                    image={trackAlbum.images[0]?.url}
+                                                    image={trackAlbum?.images?.[1]?.url ? trackAlbum.images[1].url : followArtistIcon}
                                                     type={trackAlbum.type}
                                                     release={trackAlbum.release_date}
                                                     id={trackAlbum.id}
