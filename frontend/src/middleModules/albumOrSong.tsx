@@ -214,7 +214,7 @@ function albumSongArtist() {
                             </div>
                             <div className="max-w-5/6 flex justify-center flex-col">
                                 <h1 className="text-[25px] flex justify-center mt-[20px]">Popular songs</h1>
-                                <div className="overflow-auto h-[265px] border-[1px] border-gray-800 flex justify-center ml-[10px] mr-[10px]">
+                                <div className="overflow-auto max-h-[265px] border-[1px] border-gray-800 flex justify-center ml-[10px] mr-[10px]">
                                     { topTracks.length > 0 ? (
                                         <table className="table-fixed mr-[10px] ml-[15px] mt-[5px] mb-[5px]">
                                             <tbody >
@@ -231,7 +231,7 @@ function albumSongArtist() {
                                                 ))}
                                             </tbody>
                                         </table>
-                                        ) : (<h1>Loading popular songs...</h1>)
+                                        ) : (<h1>No discography.</h1>)
                                     }
                                 </div>
                                 </div>
