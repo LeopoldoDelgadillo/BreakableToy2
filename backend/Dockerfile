@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:21-latest AS builder
+FROM azul/zulu-openjdk-alpine:17-latest AS builder
 
 WORKDIR /app
 
@@ -11,11 +11,11 @@ COPY src src
 RUN chmod +x gradlew
 RUN ./gradlew build -x test
 
-FROM azul/zulu-openjdk-alpine:21-jre-latest
+FROM azul/zulu-openjdk-alpine:17-jre-latest
 
 WORKDIR /app
 
-COPY --from=builder /app/build/libs/spotify-app-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/build/libs/demo-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 9090
 
