@@ -60,7 +60,7 @@ const AlbumSongs = ({ trackNumber, name, artists, durationMinutes, durationSecon
         <td className="">
             <div className="flex-col">
                 <p>{name}</p>
-                <div className="flex text-[10px] whitespace-nowrap">{artists.join(", ")}</div>
+                <div className="text-[9px]">{artists.join(", ")}</div>
             </div>
         </td>
         <td className="min-w-[40px] ">&nbsp;·&nbsp;{durationMinutes}:{durationSeconds >= 10 ? durationSeconds : "0"+durationSeconds}</td>

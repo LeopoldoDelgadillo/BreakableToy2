@@ -23,13 +23,13 @@ function Home() {
     refreshToken()
   return (
     <div className="flex flex-col h-screen overflow-hidden items-center bg-gray-900">
-    <div title="TopBar" className="h-[75px] flex flex-none w-screen z-10 bg-black">
+    <div data-title="TopBar" className="h-[75px] flex flex-none w-screen z-10 bg-black">
       <TopBar />
     </div>
-    <div title="Middle" className="flex-1 overflow-auto relative items-center justify-center  h-full w-screen z-0">
+    <div data-title="Middle" className="flex-1 overflow-auto relative items-center justify-center  h-full w-screen z-0">
       <Middle />
     </div>
-    <div title="NowPlaying" className="h-[50px] flex flex-none z-10 bg-black w-screen items-center">
+    <div data-title="NowPlaying" className="h-[50px] flex flex-none z-10 bg-black w-screen items-center">
       <NowPlaying />
     </div>
     </div>
