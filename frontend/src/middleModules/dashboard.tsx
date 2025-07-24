@@ -27,9 +27,9 @@ type top10 = {
 }
 
 const SearchedArray = ({ name, artists, image, id, followers, type, middleFunc,identifierFunc}: searched) => (
-    <button onClick={() => clicked(id,type,middleFunc,identifierFunc)} className="p-4 m-2 bg-gray-800 rounded-lg shadow-md text-white hover:bg-gray-700 transition grid grid-cols-4 grid-rows-4">
-        <div className="grid col-start-1 row-span-4 items-center"><img src={image} className="rounded-lg w-[64px] h-[64px]"></img></div>
-        <div className="grid col-start-2  row-start-2 row-span-2 col-span-4">
+    <button onClick={() => clicked(id,type,middleFunc,identifierFunc)} className="p-4 m-2 bg-gray-800 rounded-lg shadow-md text-white hover:bg-gray-700 transition grid grid-cols-4">
+        <div className="grid col-start-1 items-center"><img src={image} className="rounded-lg w-[64px] h-[64px]"></img></div>
+        <div className="grid col-start-2 col-span-3">
             <p className="text-[13px]">{name}</p>
             {artists.length > 0 && (<p className="text-[13px]">By: {artists.join(", ")}</p>)}
             {followers != undefined && (<p className="text-[13px]">Followers: {followers}</p>)}
