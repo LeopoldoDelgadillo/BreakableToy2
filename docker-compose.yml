@@ -1,0 +1,15 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "9090:9090"
+    environment:
+      - .env
+    depends_on:
+      - frontend
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    environment:
